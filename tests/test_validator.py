@@ -26,7 +26,7 @@ def test_string_validator():
     assert schema3.is_valid('string') is False
 
 
-def test_string_validator():
+def test_number_validator():
     v = Validator()
     schema = v.number()
     assert schema.is_valid(None) is True
@@ -47,3 +47,17 @@ def test_string_validator():
     schema2 = v.number().positive().range(10, 20).range(5, 15)
     assert schema2.is_valid(7) is True 
     assert schema2.is_valid(17) is False
+
+
+def test_list_validator():
+    v = Validator()
+    schema = v.list()
+    assert schema.is_valid(None) is True
+
+    schema = schema.required()
+    assert schema.is_valid(None) is False
+    assert schema.is_valid([]) is True
+    assert schema.is_valid(['hexlet']) is True
+
+    assert schema.sizeof(2).is_valid(['hexlet']) is False
+    assert schema.sizeof(2).is_valid(['hexlet', 'code-basics']) is True

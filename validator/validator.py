@@ -1,11 +1,3 @@
-class Validator:
-    def string(self):
-        return StringSchema()
-
-    def number(self):
-        return NumberSchema()
-
-
 class Schema():
     def __init__(self):
         self.rules = {}
@@ -47,3 +39,26 @@ class NumberSchema(Schema):
         if value is None:
             return not self._required
         return all(rule(value) for rule in self.rules.values())
+
+
+class ListSchema(Schema):
+    def sizeof(self, value):
+        self.rules['sizeof'] = lambda x: len(x) == value
+        return self
+
+    def is_valid(self, value):
+        if value is None:
+            return not self._required
+        if not isinstance(value, list):
+            return False
+        return all(rule(value) for rule in self.rules.values())
+
+class Validator:
+    def string(self):
+        return StringSchema()
+
+    def number(self):
+        return NumberSchema()
+
+    def list(self):
+        return ListSchema()
