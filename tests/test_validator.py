@@ -24,3 +24,26 @@ def test_string_validator():
 
     schema3 = v.string().min_len(4).min_len(10)
     assert schema3.is_valid('string') is False
+
+
+def test_string_validator():
+    v = Validator()
+    schema = v.number()
+    assert schema.is_valid(None) is True
+
+    schema.required()
+    assert schema.is_valid(None) is False
+    assert schema.is_valid(0) is True
+
+    assert schema.is_valid(7) is True
+
+    assert schema.positive().is_valid(7) is True
+    assert schema.positive().is_valid(-7) is False
+
+    schema.range(-5, 5)
+    assert schema.is_valid(-5) is False
+    assert schema.is_valid(5) is True
+
+    schema2 = v.number().positive().range(10, 20).range(5, 15)
+    assert schema2.is_valid(7) is True 
+    assert schema2.is_valid(17) is False
