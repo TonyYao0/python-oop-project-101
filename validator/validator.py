@@ -53,7 +53,30 @@ class ListSchema(Schema):
             return False
         return all(rule(value) for rule in self.rules.values())
 
+class DickSchema(Schema):
+    def shape(self, rules_map):
+        self.rules['shape'] = rules_map
+        return self
+
+    def is_valid(self, value):
+        if value is None:
+            return not self._required
+        if not isinstance(value, dict):
+            return False
+        if 'shape' not in self.rules:
+            return True
+        shape_rules = self.rules['shape']
+        for key, schema  in shape_rules.items():
+            if not schema.is_valid(value.get(key)):
+                return False
+        return True
+
+
 class Validator:
+    def dict(self):
+        return DickSchema()
+
+
     def string(self):
         return StringSchema()
 

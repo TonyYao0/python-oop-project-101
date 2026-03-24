@@ -61,3 +61,16 @@ def test_list_validator():
 
     assert schema.sizeof(2).is_valid(['hexlet']) is False
     assert schema.sizeof(2).is_valid(['hexlet', 'code-basics']) is True
+
+def test_dict_validator():
+    v = Validator()
+    schema = v.dict()
+    schema.shape({
+        'name': v.string().required(),
+        'age': v.number().positive(),
+    })
+
+    assert schema.is_valid({'name': 'kolya', 'age': 100})  is True
+    assert schema.is_valid({'name': 'maya', 'age': None})  is True
+    assert schema.is_valid({'name': '', 'age': None})  is False
+    assert schema.is_valid({'name': 'ada', 'age': -5})  is False
