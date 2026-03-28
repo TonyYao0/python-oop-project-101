@@ -45,7 +45,7 @@ def test_number_validator():
     assert schema.is_valid(5) is True
 
     schema2 = v.number().positive().range(10, 20).range(5, 15)
-    assert schema2.is_valid(7) is True 
+    assert schema2.is_valid(7) is True
     assert schema2.is_valid(17) is False
 
 
@@ -77,15 +77,17 @@ def test_dict_validator():
 
 def test_add_validator():
     v = Validator()
-    fn = lambda value, start: value.startswith(start)
-    v.add_validator('string', 'startWith', fn)
+    def start_with_fn(value, start):
+        return value.startswith(start)
+    v.add_validator('string', 'startWith', start_with_fn)
 
     schema = v.string().test('startWith', 'H')
     assert schema.is_valid('exlet') is False
     assert schema.is_valid('Hexlet') is True
 
-    fn = lambda value, min: value >= min
-    v.add_validator('number', 'min', fn)
+    def min_fn(value, min_val):
+        return value >= min_val
+    v.add_validator('number', 'min', min_fn)
 
     schema = v.number().test('min', 5)
     assert schema.is_valid(4) is False
